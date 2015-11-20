@@ -1,0 +1,21 @@
+Court-Terme
+[ ] Schéma Bloc du système
+[ ] BOM préliminaire/Créer le fichier
+[ ] "Mockup" de l'interface Graphique
+[ ]  
+[ ] 
+
+Moyen-terme 
+[ ] Programmer et tester la libraire pour utiliser le capteur de température DS18B20
+[ ] Sélectionner un Power Supply
+[ ] Sélectionner un Relais (ou SSR, pas encore choisi)
+[ ] Programmer une librairie pour utiliser l'écran du STM32F7 Discovery facilement
+[ ] 
+[ ] 
+
+Long-terme
+[ ] Programmer une libraire pour faire des PID
+[ ] Programmer l'interface Usager à partir de la conception graphique du mockup
+[ ] Programmer une librairie pour garder des paramètre en mémoire après un power-cycle
+[ ] Programmer une page d'interface pour accéder aux paramètres et les changer/sauvegarder
+[ ] 
