@@ -1,0 +1,17 @@
+STM32F7 Discovery Board
+http://www.st.com/web/en/catalog/tools/FM116/SC959/SS1532/LN1848/PF261641?icmp=pf261641_pron_pr-massmarket_jun2015&sc=stm32f7discovery-pr
+
+STM32CubeMx software
+http://www.st.com/web/catalog/tools/FM147/CL1794/SC961/SS1743/PF259242?sc=microxplorer
+
+Atollic True Studio Free GCC-ARM based toolchain
+http://timor.atollic.com/truestudio/
+
+Librairies Graphique Gratuite (possibilité de l'utiliser)
+http://ugfx.org/
+
+Librairie one-wire disponible
+http://stm32f4-discovery.com/2014/05/library-12-onewire-library-for-stm43f4xx/
+
+Librairie pour capteur DS18B20 disponible
+http://stm32f4-discovery.com/2014/05/13-reading-temperature-with-dallas-ds18b20-on-stm32f429-discovery-board/
