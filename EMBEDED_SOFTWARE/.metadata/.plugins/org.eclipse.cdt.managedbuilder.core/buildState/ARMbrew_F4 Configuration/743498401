@@ -1,0 +1,24 @@
+#
+#Sat Nov 21 11:09:37 EST 2015
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_flash_ramfunc.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_dma.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_tim_ex.o=1
+Release/Application/User/stm32f4xx_it.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_flash_ex.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_rcc_ex.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_rcc.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_flash.o=1
+Release/Application/TrueSTUDIO/startup_stm32f446xx.o=1
+Release/ARMbrew_F4\ Configuration=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_pwr.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_pwr_ex.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_uart.o=1
+Release/Application/User/main.o=1
+Release/ARMbrew_F4\ Configuration.elf=1
+Release/Drivers/CMSIS/system_stm32f4xx.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_gpio.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_dma_ex.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_cortex.o=1
+Release/Drivers/STM32F4xx_HAL_Driver/stm32f4xx_hal_tim.o=1
+Release/Application/User/stm32f4xx_hal_msp.o=1

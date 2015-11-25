@@ -2,7 +2,7 @@ Court-Terme
 [ ] Schéma Bloc du système
 [ ] BOM préliminaire/Créer le fichier
 [ ] "Mockup" de l'interface Graphique
-[ ]  
+[ ] 
 [ ] 
 
 Moyen-terme 
@@ -10,11 +10,12 @@ Moyen-terme
 [ ] Sélectionner un Power Supply
 [ ] Sélectionner un Relais (ou SSR, pas encore choisi)
 [ ] Programmer une librairie pour utiliser l'écran du STM32F7 Discovery facilement
-[ ] 
-[ ] 
+[X] Programmer l'utilisation du UART (pour effectuer des tests) et avoir des feedback avec un terminal
+[X] Programmer une routine de base qui fait flasher une lumière avec L'interruption d'un Timer 
 
 Long-terme
 [ ] Programmer une libraire pour faire des PID
+[ ] Programmer une Librairie de Blocs PLC de base (TON, TOF, R_TRIG, F_TRIG, CTU, CTD)
 [ ] Programmer l'interface Usager à partir de la conception graphique du mockup
 [ ] Programmer une librairie pour garder des paramètre en mémoire après un power-cycle
 [ ] Programmer une page d'interface pour accéder aux paramètres et les changer/sauvegarder

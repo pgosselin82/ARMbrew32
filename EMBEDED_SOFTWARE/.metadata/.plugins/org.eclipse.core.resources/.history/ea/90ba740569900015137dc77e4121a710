@@ -92,7 +92,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  char test[10]="TEST2 ";
+	  char test[10]="TEST ";
 
 	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
 
