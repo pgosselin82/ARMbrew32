@@ -8,3 +8,33 @@ GUI is waiting for subprocess to be done...
 Execution done. EXIT CODE = 0
   Logging finished.  ## CURRENT TIME  : [11/21, 2015   10:43  7.475]
 ------------------------------------
+
+------------------------------------
+  Logging start.  ## CURRENT TIME  : [3/6, 2016   18:0  23.708]  ## COMMAND LINE  : 
+cmd /C "gen_csini.exe"
+------------------------------------
+[STD-IN] : D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\.metadata\.plugins\sst.csgp\bin\env_vars.txt
+GUI is waiting for subprocess to be done...
+Execution done. EXIT CODE = 0
+  Logging finished.  ## CURRENT TIME  : [3/6, 2016   18:0  25.999]
+------------------------------------
+
+------------------------------------
+  Logging start.  ## CURRENT TIME  : [3/14, 2016   18:54  25.782]  ## COMMAND LINE  : 
+cmd /C "gen_csini.exe"
+------------------------------------
+[STD-IN] : D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\.metadata\.plugins\sst.csgp\bin\env_vars.txt
+GUI is waiting for subprocess to be done...
+Execution done. EXIT CODE = 0
+  Logging finished.  ## CURRENT TIME  : [3/14, 2016   18:54  28.271]
+------------------------------------
+
+------------------------------------
+  Logging start.  ## CURRENT TIME  : [3/14, 2016   21:23  16.144]  ## COMMAND LINE  : 
+cmd /C "gen_csini.exe"
+------------------------------------
+[STD-IN] : D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\.metadata\.plugins\sst.csgp\bin\env_vars.txt
+GUI is waiting for subprocess to be done...
+Execution done. EXIT CODE = 0
+  Logging finished.  ## CURRENT TIME  : [3/14, 2016   21:23  18.436]
+------------------------------------

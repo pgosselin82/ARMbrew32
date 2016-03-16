@@ -4,7 +4,7 @@
   * Description        : Main program body
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2015 STMicroelectronics
+  * COPYRIGHT(c) 2016 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -35,11 +35,17 @@
 
 /* USER CODE BEGIN Includes */
 #include "strings.h"
+#include "onewire.h"
+#include "ds18x20.h"
+#include "tm_stm32f4_hd44780.h"
+
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim6;
 
+//UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -51,11 +57,21 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM6_Init(void);
+//static void MX_UART5_Init(void);
 static void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+uint8_t id[OW_ROMCODE_SIZE];
 
+char *get_type_by_id(uint8_t id) {
+  switch(id) {
+    case DS18S20_FAMILY_CODE: return "DS18S20";
+    case DS18B20_FAMILY_CODE: return "DS18B20";
+    case DS1822_FAMILY_CODE : return "DS1822";
+    default: return "WTF?!";
+  }
+}
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -66,6 +82,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	char test[255]="TEST3 ";
+		 uint8_t c = 0, diff = OW_SEARCH_FIRST;
+			  int16_t temp_dc;
 
   /* USER CODE END 1 */
 
@@ -80,11 +99,64 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM6_Init();
+  //MX_UART5_Init();
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
 
+
+  TM_HD44780_Init(20,4);
+ TM_HD44780_Puts(0, 0, "STM32F4/29 Discovery");
+
+
+
   HAL_TIM_Base_Start_IT(&htim6);
+
+  test[0]=13;
+  HAL_UART_Transmit(&huart2,test,1,200);
+
+  sprintf(test,"\n\rthis is a test\n\r");
+  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+
+		  ow_init();
+		  while(diff != OW_LAST_DEVICE) {
+		    DS18X20_find_sensor(&diff, id);
+		    if(diff == OW_ERR_PRESENCE) {
+		    	sprintf(test,"All sensors are offline now.\n\r");
+		      HAL_UART_Transmit(&huart2,test,strlen(test),200);
+		      break;
+		      ow_finit();
+		    }
+		    if(diff == OW_ERR_DATA) {
+
+		    	sprintf(test,"Bus error.\n\r");
+		      		      HAL_UART_Transmit(&huart2,test,strlen(test),200);
+		      break;
+		      ow_finit();
+		    }
+		    sprintf(test,"Bus %i Device %03u Type 0x%02hx (%s) ID %02hx%02hx%02hx%02hx%02hx%02hx CRC 0x%02hx \n\r", \
+			           5, c, id[0], get_type_by_id(id[0]), id[6], id[5], id[4], id[3], id[2], id[1], id[7]);
+		     HAL_UART_Transmit(&huart2,test,strlen(test),200);
+		    /*printf("Bus %s Device %03u Type 0x%02hx (%s) ID %02hx%02hx%02hx%02hx%02hx%02hx CRC 0x%02hx ", \
+		           argv[1], c, id[0], get_type_by_id(id[0]), id[6], id[5], id[4], id[3], id[2], id[1], id[7]);*/
+		    c ++;
+
+		    if(DS18X20_start_meas(DS18X20_POWER_EXTERN, NULL) == DS18X20_OK) {
+		      if(DS18X20_read_decicelsius(id, &temp_dc) == DS18X20_OK) {
+		    	  sprintf(test,"TEMP %3d.%01d C\n", temp_dc / 10, temp_dc > 0 ? temp_dc % 10 : -temp_dc % 10);
+		    	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+		    	  	continue;
+		      }
+		    }
+
+		    sprintf(test,"MEASURE FAILED!\n\r");
+		    HAL_UART_Transmit(&huart2,test,strlen(test),200);
+
+		  }
+		  sprintf(test,"Sensors listed.\n\r");
+		  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+
+		  ow_finit();
 
   /* USER CODE END 2 */
 
@@ -92,9 +164,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  char test[10]="TEST2 ";
+	  char test[10]="TEST3 ";
 
-	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+
+
+	  sprintf(test,"Test 3\n\r");
+	  		  HAL_UART_Transmit(&huart2,test,strlen(test),200);
 
 
 
@@ -134,8 +209,8 @@ void SystemClock_Config(void)
 
   HAL_PWREx_ActivateOverDrive();
 
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1
-                              |RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
@@ -168,6 +243,22 @@ void MX_TIM6_Init(void)
 
 }
 
+/* UART5 init function */
+/*void MX_UART5_Init(void)
+{
+
+  huart5.Instance = UART5;
+  huart5.Init.BaudRate = 9600;
+  huart5.Init.WordLength = UART_WORDLENGTH_8B;
+  huart5.Init.StopBits = UART_STOPBITS_1;
+  huart5.Init.Parity = UART_PARITY_NONE;
+  huart5.Init.Mode = UART_MODE_TX_RX;
+  huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart5.Init.OverSampling = UART_OVERSAMPLING_16;
+  HAL_UART_Init(&huart5);
+
+}
+*/
 /* USART2 init function */
 void MX_USART2_UART_Init(void)
 {
@@ -200,6 +291,7 @@ void MX_GPIO_Init(void)
   __GPIOC_CLK_ENABLE();
   __GPIOH_CLK_ENABLE();
   __GPIOA_CLK_ENABLE();
+  __GPIOD_CLK_ENABLE();
   __GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin : USER_BUTTON_Pin */
@@ -214,6 +306,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
 }
 
