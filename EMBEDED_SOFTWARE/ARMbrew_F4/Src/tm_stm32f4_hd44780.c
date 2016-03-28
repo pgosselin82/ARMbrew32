@@ -46,7 +46,7 @@ static HD44780_Options_t HD44780_Opts;
 #define HD44780_E_LOW               HAL_GPIO_WritePin(HD44780_E_PORT, HD44780_E_PIN,GPIO_PIN_RESET)
 #define HD44780_E_HIGH              HAL_GPIO_WritePin(HD44780_E_PORT, HD44780_E_PIN,GPIO_PIN_SET)
 
-#define HD44780_E_BLINK             HD44780_E_HIGH; HD44780_Delay(20); HD44780_E_LOW; HD44780_Delay(20)
+#define HD44780_E_BLINK             HD44780_E_HIGH; HD44780_Delay(1); HD44780_E_LOW; HD44780_Delay(1)
 #define HD44780_Delay(x)            HAL_Delay(x)
 
 /* Commands*/
@@ -107,19 +107,19 @@ void TM_HD44780_Init(uint8_t cols, uint8_t rows) {
 	
 	/* Try to set 4bit mode */
 	TM_HD44780_Cmd4bit(0x03);
-	HD44780_Delay(45);
+	HD44780_Delay(5);
 	
 	/* Second try */
 	TM_HD44780_Cmd4bit(0x03);
-	HD44780_Delay(45);
+	HD44780_Delay(5);
 	
 	/* Third goo! */
 	TM_HD44780_Cmd4bit(0x03);
-	HD44780_Delay(45);
+	HD44780_Delay(5);
 	
 	/* Set 4-bit interface */
 	TM_HD44780_Cmd4bit(0x02);
-	HD44780_Delay(100);
+	HD44780_Delay(1);
 	
 	/* Set # lines, font size, etc. */
 	TM_HD44780_Cmd(HD44780_FUNCTIONSET | HD44780_Opts.DisplayFunction);
@@ -141,7 +141,7 @@ void TM_HD44780_Init(uint8_t cols, uint8_t rows) {
 
 void TM_HD44780_Clear(void) {
 	TM_HD44780_Cmd(HD44780_CLEARDISPLAY);
-	HD44780_Delay(30);
+	HD44780_Delay(3);
 }
 
 void TM_HD44780_Puts(uint8_t x, uint8_t y, char* str) {

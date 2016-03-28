@@ -35,17 +35,14 @@
 
 /* USER CODE BEGIN Includes */
 #include "strings.h"
-#include "onewire.h"
-#include "ds18x20.h"
 #include "tm_stm32f4_hd44780.h"
-
+#include "tm_stm32f4_onewire.h"
 
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim6;
 
-//UART_HandleTypeDef huart5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -57,21 +54,11 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM6_Init(void);
-//static void MX_UART5_Init(void);
 static void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-uint8_t id[OW_ROMCODE_SIZE];
 
-char *get_type_by_id(uint8_t id) {
-  switch(id) {
-    case DS18S20_FAMILY_CODE: return "DS18S20";
-    case DS18B20_FAMILY_CODE: return "DS18B20";
-    case DS1822_FAMILY_CODE : return "DS1822";
-    default: return "WTF?!";
-  }
-}
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -82,9 +69,25 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	//String for printing stuff
 	char test[255]="TEST3 ";
-		 uint8_t c = 0, diff = OW_SEARCH_FIRST;
-			  int16_t temp_dc;
+	//One-Wire Variables
+
+	    uint8_t devices, i, j, count, device[2][8];
+	    /* OneWire working structure */
+	    TM_OneWire_t OneWire1;
+
+
+	uint8_t degreeSignChar[] = {
+		0b00110,		// xxx 00110
+		0b01001,		// xxx 01001
+		0b01001,		// xxx 01001
+		0b00110,		// xxx 00110
+		0b00000,		// xxx 00000
+		0b00000,		// xxx 00000
+		0b00000,		// xxx 00000
+		0b00000			// xxx 00000
+	};
 
   /* USER CODE END 1 */
 
@@ -99,81 +102,75 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM6_Init();
-  //MX_UART5_Init();
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
 
-
-  TM_HD44780_Init(20,4);
- TM_HD44780_Puts(0, 0, "STM32F4/29 Discovery");
-
-
-
   HAL_TIM_Base_Start_IT(&htim6);
 
-  test[0]=13;
-  HAL_UART_Transmit(&huart2,test,1,200);
+  //Init 4x20 LCD
+  TM_HD44780_Init(20,4);
+  TM_HD44780_CreateChar(0, &degreeSignChar[0]);
 
+  //Print String on LCD
+  sprintf(test,"Test : %3.2f  C\n\rL2\n\rL3\n\rL4",124.2);
+  TM_HD44780_Puts(0, 0, test);
+  //Put the degree Sign
+  TM_HD44780_PutCustom(14,0,0);
+
+  //Print Test String on UART2
   sprintf(test,"\n\rthis is a test\n\r");
   HAL_UART_Transmit(&huart2,test,strlen(test),200);
 
-		  ow_init();
-		  while(diff != OW_LAST_DEVICE) {
-		    DS18X20_find_sensor(&diff, id);
-		    if(diff == OW_ERR_PRESENCE) {
-		    	sprintf(test,"All sensors are offline now.\n\r");
-		      HAL_UART_Transmit(&huart2,test,strlen(test),200);
-		      break;
-		      ow_finit();
-		    }
-		    if(diff == OW_ERR_DATA) {
 
-		    	sprintf(test,"Bus error.\n\r");
-		      		      HAL_UART_Transmit(&huart2,test,strlen(test),200);
-		      break;
-		      ow_finit();
-		    }
-		    sprintf(test,"Bus %i Device %03u Type 0x%02hx (%s) ID %02hx%02hx%02hx%02hx%02hx%02hx CRC 0x%02hx \n\r", \
-			           5, c, id[0], get_type_by_id(id[0]), id[6], id[5], id[4], id[3], id[2], id[1], id[7]);
-		     HAL_UART_Transmit(&huart2,test,strlen(test),200);
-		    /*printf("Bus %s Device %03u Type 0x%02hx (%s) ID %02hx%02hx%02hx%02hx%02hx%02hx CRC 0x%02hx ", \
-		           argv[1], c, id[0], get_type_by_id(id[0]), id[6], id[5], id[4], id[3], id[2], id[1], id[7]);*/
-		    c ++;
+  TM_OneWire_Init(&OneWire1, GPIOD, GPIO_PIN_2);
 
-		    if(DS18X20_start_meas(DS18X20_POWER_EXTERN, NULL) == DS18X20_OK) {
-		      if(DS18X20_read_decicelsius(id, &temp_dc) == DS18X20_OK) {
-		    	  sprintf(test,"TEMP %3d.%01d C\n", temp_dc / 10, temp_dc > 0 ? temp_dc % 10 : -temp_dc % 10);
-		    	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
-		    	  	continue;
-		      }
-		    }
+  devices = TM_OneWire_First(&OneWire1);
+      count = 0;
+      while (devices) {
+          /* Increase count variable */
+          count++;
 
-		    sprintf(test,"MEASURE FAILED!\n\r");
-		    HAL_UART_Transmit(&huart2,test,strlen(test),200);
+          /* Get full 8-bytes rom address */
+          TM_OneWire_GetFullROM(&OneWire1, device[count - 1]);
 
-		  }
-		  sprintf(test,"Sensors listed.\n\r");
-		  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+          /* Check for new device */
+          devices = TM_OneWire_Next(&OneWire1);
+      }
 
-		  ow_finit();
+      /* If any devices on 1-wire */
+      if (count > 0) {
+    	  sprintf(test,"Devices found on 1-wire instance: %d\n", count);
+    	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+
+          /* Display 64bit rom code */
+          for (j = 0; j < count; j++) {
+              for (i = 0; i < 8; i++) {
+            	  sprintf(test,"0x%02X ", device[j][i]);
+            	  HAL_UART_Transmit(&huart2,test,strlen(test),200);
+              }
+              sprintf(test, "\n");
+          }
+      } else {
+          /* Nothing on OneWire */
+    	  sprintf(test,"No devices on OneWire.\n\n");
+      }
+
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  char test[10]="TEST3 ";
+	while (1)
+	{
+
+		//Print Periodic Test on UART
+		sprintf(test,"Test 3\n\r");
+		HAL_UART_Transmit(&huart2,test,strlen(test),200);
 
 
-
-	  sprintf(test,"Test 3\n\r");
-	  		  HAL_UART_Transmit(&huart2,test,strlen(test),200);
-
-
-
-	  HAL_Delay(1000);
+		//1 Second Delay
+		HAL_Delay(1000);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -191,7 +188,7 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
 
-  __PWR_CLK_ENABLE();
+  __HAL_RCC_PWR_CLK_ENABLE();
 
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
@@ -207,7 +204,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLR = 2;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  HAL_PWREx_ActivateOverDrive();
+  HAL_PWREx_EnableOverDrive();
 
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -243,22 +240,6 @@ void MX_TIM6_Init(void)
 
 }
 
-/* UART5 init function */
-/*void MX_UART5_Init(void)
-{
-
-  huart5.Instance = UART5;
-  huart5.Init.BaudRate = 9600;
-  huart5.Init.WordLength = UART_WORDLENGTH_8B;
-  huart5.Init.StopBits = UART_STOPBITS_1;
-  huart5.Init.Parity = UART_PARITY_NONE;
-  huart5.Init.Mode = UART_MODE_TX_RX;
-  huart5.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart5.Init.OverSampling = UART_OVERSAMPLING_16;
-  HAL_UART_Init(&huart5);
-
-}
-*/
 /* USART2 init function */
 void MX_USART2_UART_Init(void)
 {
@@ -288,11 +269,10 @@ void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
-  __GPIOC_CLK_ENABLE();
-  __GPIOH_CLK_ENABLE();
-  __GPIOA_CLK_ENABLE();
-  __GPIOD_CLK_ENABLE();
-  __GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin : USER_BUTTON_Pin */
   GPIO_InitStruct.Pin = USER_BUTTON_Pin;
@@ -304,7 +284,7 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin Output Level */

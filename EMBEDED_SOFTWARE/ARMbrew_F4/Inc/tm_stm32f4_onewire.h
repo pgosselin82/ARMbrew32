@@ -1,93 +1,9 @@
-/**
- * @author  Tilen Majerle
- * @email   tilen@majerle.eu
- * @website http://stm32f4-discovery.com
- * @link    http://stm32f4-discovery.com/2014/05/library-12-onewire-library-for-stm43f4xx/
- * @version v2.1
- * @ide     Keil uVision
- * @license GNU GPL v3
- * @brief   Onewire library for STM32F4 devices
- *	
-@verbatim
-   ----------------------------------------------------------------------
-    Copyright (C) Tilen Majerle, 2015
-    
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
-     
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-   ----------------------------------------------------------------------
-@endverbatim
- */
+
 #ifndef TM_ONEWIRE_H
 #define TM_ONEWIRE_H 210
 
-/* C++ detection */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * @addtogroup TM_STM32F4xx_Libraries
- * @{
- */
-
-/**
- * @defgroup TM_ONEWIRE
- * @brief    Onewire library for STM32F4 devices - http://stm32f4-discovery.com/2014/05/library-12-onewire-library-for-stm43f4xx/
- * @{
- *
- * As of version 2.0 you can now use more than just one one-wire "port" on STM32F4. This allows you to group devices to separate ports.
- * 
- * Because if you have a loot devices on one port, if one device fail, everything is failed. You can prevent this by use more than just one port.
- *
- * To set your port and pin for OneWire protocol, you can do this when calling @ref TM_OneWire_Init function.
- *
- * \par Changelog
- *
-@verbatim
- Version 2.1
-  - March 10, 2015
-  - Added support for new GPIO library 
-
- Version 2.0
-  - January 04, 2015
-  - New OneWire system
-  - With support for multiple OneWire ports to separate group of devices
-
- Version 1.1
-  - December 06, 2014
-  - Added 8-bit CRC calculation for 1-Wire devices, algorithm from Dallas
- 
- Version 1.0
-  - First release
-@endverbatim
- *
- * \par Dependencies
- *
-@verbatim
- - STM32F4xx
- - STM32F4xx RCC
- - STM32F4xx GPIO
- - defines.h
- - TM DELAY
- - TM GPIO
-@endverbatim
- */
 #include "stm32f4xx.h"
-#include "stm32f4xx_rcc.h"
-#include "stm32f4xx_gpio.h"
-#include "defines.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4xx_hal.h"
 
 /**
  * @defgroup TM_ONEWIRE_Macros
@@ -95,14 +11,16 @@ extern "C" {
  * @{
  */
 
+
 /* OneWire delay */
-#define ONEWIRE_DELAY(x)				Delay(x)
+#define ONEWIRE_DELAY(x)				HAL_Delay(x)
+
 
 /* Pin settings */
-#define ONEWIRE_LOW(structure)			TM_GPIO_SetPinLow((structure)->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_HIGH(structure)			TM_GPIO_SetPinHigh((structure)->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_INPUT(structure)		TM_GPIO_SetPinAsInput(structure->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_OUTPUT(structure)		TM_GPIO_SetPinAsOutput(structure->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_LOW(structure)			HAL_GPIO_WritePin((structure)->GPIOx, (structure)->GPIO_Pin,0)
+#define ONEWIRE_HIGH(structure)			HAL_GPIO_WritePin((structure)->GPIOx, (structure)->GPIO_Pin,1)
+#define ONEWIRE_INPUT(structure)		TM_OW_GPIO_SetPinAsInput(structure->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_OUTPUT(structure)		TM_OW_GPIO_SetPinAsOutput(structure->GPIOx, (structure)->GPIO_Pin)
 
 /* OneWire commands */
 #define ONEWIRE_CMD_RSCRATCHPAD			0xBE
@@ -147,7 +65,8 @@ typedef struct {
  * @brief    Library Functions
  * @{
  */
-
+void TM_OW_GPIO_SetPinAsInput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void TM_OW_GPIO_SetPinAsOutput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 /**
  * @brief  Initializes OneWire bus
  * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t empty working onewire structure
@@ -298,10 +217,5 @@ uint8_t TM_OneWire_CRC8(uint8_t* addr, uint8_t len);
  * @}
  */
  
-/* C++ detection */
-#ifdef __cplusplus
-}
-#endif
-
 #endif
 

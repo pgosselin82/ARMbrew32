@@ -87,7 +87,7 @@ K		GND				Ground for back light
 /* D4 - Data 4 pin */
 #ifndef HD44780_D4_PIN
 #define HD44780_D4_PORT				GPIOB
-#define HD44780_D4_PIN				GPIO_PIN_11
+#define HD44780_D4_PIN				GPIO_PIN_1
 #endif
 /* D5 - Data 5 pin */
 #ifndef HD44780_D5_PIN

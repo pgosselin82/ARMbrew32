@@ -17,14 +17,44 @@
  * |----------------------------------------------------------------------
  */
 #include "tm_stm32f4_onewire.h"
+#include "stm32f4xx_hal.h"
+
+
+void TM_OW_GPIO_SetPinAsInput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin) {
+	uint8_t i;
+	/* Go through all pins */
+	for (i = 0x00; i < 0x10; i++) {
+		/* Pin is set */
+		if (GPIO_Pin & (1 << i)) {
+			/* Set 00 bits combination for input */
+			GPIOx->MODER &= ~(0x03 << (2 * i));
+		}
+	}
+}
+
+void TM_OW_GPIO_SetPinAsOutput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin) {
+	uint8_t i;
+	/* Go through all pins */
+	for (i = 0x00; i < 0x10; i++) {
+		/* Pin is set */
+		if (GPIO_Pin & (1 << i)) {
+			/* Set 01 bits combination for output */
+			GPIOx->MODER = (GPIOx->MODER & ~(0x03 << (2 * i))) | (0x01 << (2 * i));
+		}
+	}
+}
 
 void TM_OneWire_Init(TM_OneWire_t* OneWireStruct, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin) {
 	/* Initialize delay if it was not already */
-	TM_DELAY_Init();
+	  GPIO_InitTypeDef GPIO_InitStruct;
 
-	/* Init GPIO pin */
-	TM_GPIO_Init(GPIOx, GPIO_Pin, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
-	
+	  /*Configure GPIO pin : USER_BUTTON_Pin */
+	  GPIO_InitStruct.Pin = GPIO_Pin;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	  GPIO_InitStruct.Pull = GPIO_PULLUP;
+	  GPIO_InitStruct.Speed = GPIO_SPEED_MEDIUM;
+	  HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+
 	/* Save settings */
 	OneWireStruct->GPIOx = GPIOx;
 	OneWireStruct->GPIO_Pin = GPIO_Pin;
@@ -43,7 +73,7 @@ uint8_t TM_OneWire_Reset(TM_OneWire_t* OneWireStruct) {
 	ONEWIRE_DELAY(70);
 	
 	/* Check bit value */
-	i = TM_GPIO_GetInputPinValue(OneWireStruct->GPIOx, OneWireStruct->GPIO_Pin);
+	i = HAL_GPIO_ReadPin(OneWireStruct->GPIOx, OneWireStruct->GPIO_Pin);
 	
 	/* Delay for 410 us */
 	ONEWIRE_DELAY(410);
@@ -369,3 +399,5 @@ uint8_t TM_OneWire_CRC8(uint8_t *addr, uint8_t len) {
 	/* Return calculated CRC */
 	return crc;
 }
+
+
