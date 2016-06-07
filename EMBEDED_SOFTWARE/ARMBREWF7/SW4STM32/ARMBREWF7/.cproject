@@ -3,7 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.524676761">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.524676761" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -34,24 +36,24 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="fr.ac6.managedbuild.gnu.c.compiler.option.optimization.level.1920506841" name="Optimization Level" superClass="fr.ac6.managedbuild.gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="fr.ac6.managedbuild.gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.680772405" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.875744324" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../../Inc"/>
-									<listOptionValue builtIn="false" value="../../../Drivers/STM32F7xx_HAL_Driver/Inc"/>
-									<listOptionValue builtIn="false" value="../../../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy"/>
-									<listOptionValue builtIn="false" value="../../../Middlewares/Third_Party/FatFs/src/drivers"/>
-									<listOptionValue builtIn="false" value="../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1"/>
-									<listOptionValue builtIn="false" value="../../../Middlewares/Third_Party/FatFs/src"/>
-									<listOptionValue builtIn="false" value="../../../Middlewares/Third_Party/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
-									<listOptionValue builtIn="false" value="../../../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../../../Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value=""/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Middlewares\ST\STemWin\inc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Drivers\BSP\STM32746G-Discovery&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Drivers\BSP\Components&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Drivers\BSP\Components\Common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\utilities&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\utilities\Fonts&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Drivers\BSP\Components\wm8994&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares\ST\STemWin\inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers\BSP\STM32746G-Discovery&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers\BSP\Components&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers\BSP\Components\Common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../utilities\Fonts&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers\BSP\Components\wm8994&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers/CMSIS/Device/ST/STM32F7xx/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/Third_Party/FreeRTOS/Source/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/Third_Party/FatFs/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/Third_Party/FatFs/src/drivers&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Drivers/STM32F7xx_HAL_Driver/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Inc&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1446771467" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=&quot;__attribute__((weak))&quot;"/>
@@ -75,7 +77,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value=":STemWin528_CM7_GCC.a"/>
 								</option>
 								<option id="gnu.c.link.option.paths.120172434" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;D:\GitHub\ARMbrew32\EMBEDED_SOFTWARE\ARMBREWF7\Middlewares\ST\STemWin\Lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../Middlewares/ST/STemWin/Lib&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.ldflags.1150012302" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-specs=nosys.specs -specs=nano.specs" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1496486389" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
@@ -120,4 +122,5 @@
 			<resource resourceType="PROJECT" workspacePath="/ARMBREWF7"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

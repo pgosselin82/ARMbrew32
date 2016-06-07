@@ -13,6 +13,7 @@
 #include "MyGui.h"
 #include "GlobalVar.h"
 
+
 #include <string.h>
 
 
@@ -140,7 +141,6 @@ void InitGui(void) {
 
 
 
-
 	 // WM_Activate();
   /*while(1){
 
@@ -227,6 +227,7 @@ void DrawPage1(void){
 }
 void DrawPage2(void){
 	GUI_DispStringAt("Page2 for future use",113,8);
+
 }
 void DrawPage3(void){
 	GUI_DispStringAt("Page3 for future use",113,8);
