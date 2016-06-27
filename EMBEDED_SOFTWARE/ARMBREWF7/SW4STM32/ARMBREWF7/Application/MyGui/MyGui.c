@@ -40,12 +40,24 @@ GUI_HWIN hWin;
 
 
 
-
+/* Menu buttons */
 GUI_BUTTON bt_menu1;
 GUI_BUTTON bt_menu2;
 GUI_BUTTON bt_menu3;
 GUI_BUTTON bt_menu4;
 GUI_BUTTON bt_menu5;
+
+/* Page 2 buttons */
+GUI_BUTTON bt_pwm_plus;
+GUI_BUTTON bt_pwm_minus;
+GUI_BUTTON bt_pwm_on;
+GUI_BUTTON bt_pwm_pct;
+GUI_BUTTON bt_pwm_set_pct_100;
+GUI_BUTTON bt_pwm_set_pct_75;
+GUI_BUTTON bt_pwm_set_pct_50;
+GUI_BUTTON bt_pwm_set_pct_25;
+GUI_BUTTON bt_pwm_set_pct_0;
+
 FR_GUI_GRAPH_T temp_plot;
 
 void Draw_menu(void);
@@ -55,6 +67,19 @@ void Menu2Touch(void);
 void Menu3Touch(void);
 void Menu4Touch(void);
 void Menu5Touch(void);
+
+void bt_pwm_plus_touch(void);
+void bt_pwm_minus_touch(void);
+void bt_pwm_on_touch(void);
+void bt_pwm_set_100_touch(void);
+void bt_pwm_set_75_touch(void);
+void bt_pwm_set_50_touch(void);
+void bt_pwm_set_25_touch(void);
+void bt_pwm_set_0_touch(void);
+
+
+
+
 
 void DrawPage1(void);
 void DrawPage2(void);
@@ -95,7 +120,7 @@ void InitGui(void) {
 	  y=distance;
 	  GUI_BUTTON_INIT(&bt_menu1,x,y,rect_width,rect_height,"Temp Graph",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu1Touch,NULL);
 	  y=y+rect_height+distance;
-	  GUI_BUTTON_INIT(&bt_menu2,x,y,rect_width,rect_height,"Menu2",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu2Touch,NULL);
+	  GUI_BUTTON_INIT(&bt_menu2,x,y,rect_width,rect_height,"PWM CTRL",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu2Touch,NULL);
 	  y=y+rect_height+distance;
 	  GUI_BUTTON_INIT(&bt_menu3,x,y,rect_width,rect_height,"Menu3",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu3Touch,NULL);
 	  y=y+rect_height+distance;
@@ -103,6 +128,39 @@ void InitGui(void) {
 	  y=y+rect_height+distance;
 	  GUI_BUTTON_INIT(&bt_menu5,x,y,rect_width,rect_height,"Settings",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu5Touch,NULL);
 
+	  /* Buttons on Page 1 */
+
+	  /* Buttons on Page 2 */
+	  x=150;
+	  GUI_BUTTON_INIT(&bt_pwm_pct,x,125,95,50,"0",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,NULL,NULL);
+
+
+	  x=250;
+	  y=100;
+	  GUI_BUTTON_INIT(&bt_pwm_plus,x,y,50,50,"+",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_plus_touch,NULL);
+	  y+=55;
+	  GUI_BUTTON_INIT(&bt_pwm_minus,x,y,50,50,"-",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_minus_touch,NULL);
+	  x+=55;
+	  GUI_BUTTON_INIT(&bt_pwm_on,x,100,50,105,"OFF",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_on_touch,NULL);
+
+
+	  x=400;
+	  y=35;
+	  GUI_BUTTON_INIT(&bt_pwm_set_pct_100,x,y,55,40,"SET 100",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_100_touch,NULL);
+	  y+=45;
+	  GUI_BUTTON_INIT(&bt_pwm_set_pct_75,x,y,55,40,"SET 75",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_75_touch,NULL);
+	  y+=45;
+	  GUI_BUTTON_INIT(&bt_pwm_set_pct_50,x,y,55,40,"SET 50",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_50_touch,NULL);
+	  y+=45;
+	  GUI_BUTTON_INIT(&bt_pwm_set_pct_25,x,y,55,40,"SET 25",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_25_touch,NULL);
+	  y+=45;
+	  GUI_BUTTON_INIT(&bt_pwm_set_pct_0,x,y,55,40,"SET 0",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_0_touch,NULL);
+
+	  /* Buttons on Page 3 */
+
+	  /* Buttons on Page 4 */
+
+	  /* Buttons on Page 5 */
 
 	  temp_plot.x=150;
 	  temp_plot.y=50;
@@ -226,7 +284,20 @@ void DrawPage1(void){
 	Draw_graph_struct(&temp_plot);
 }
 void DrawPage2(void){
-	GUI_DispStringAt("Page2 for future use",113,8);
+	GUI_DispStringAt("PWM CONTROL OF THE HEATING ELEMENT",113,8);
+	 Draw_button_struct(&bt_pwm_plus);
+	 Draw_button_struct(&bt_pwm_minus);
+	 Draw_button_struct(&bt_pwm_on);
+
+
+	 sprintf(bt_pwm_pct.text,"%i %%",G_pwm_pct_value);
+	 Draw_button_struct(&bt_pwm_pct);
+
+	Draw_button_struct(&bt_pwm_set_pct_100);
+	Draw_button_struct(&bt_pwm_set_pct_75);
+	Draw_button_struct(&bt_pwm_set_pct_50);
+	Draw_button_struct(&bt_pwm_set_pct_25);
+	Draw_button_struct(&bt_pwm_set_pct_0);
 
 }
 void DrawPage3(void){
@@ -253,6 +324,47 @@ void Menu4Touch(void){
 }
 void Menu5Touch(void){
 	CurrentPage=5;
+}
+
+void bt_pwm_plus_touch(void){
+	//PWM++
+	if(G_pwm_pct_value<100){
+		G_pwm_pct_value+=1;
+	}
+}
+void bt_pwm_minus_touch(void){
+	//PWM--
+	if(G_pwm_pct_value>0){
+		G_pwm_pct_value-=1;
+	}
+}
+
+void bt_pwm_on_touch(void){
+	//PWM TOOGLE
+
+	if(G_pwm_output_status==0){
+		G_pwm_output_status=1;
+		strcpy(bt_pwm_on.text,"ON");
+	}else{
+		G_pwm_output_status=0;
+		strcpy(bt_pwm_on.text,"OFF");
+	}
+}
+
+void bt_pwm_set_100_touch(void){
+	G_pwm_pct_value=100;
+}
+void bt_pwm_set_75_touch(void){
+	G_pwm_pct_value=75;
+}
+void bt_pwm_set_50_touch(void){
+	G_pwm_pct_value=50;
+}
+void bt_pwm_set_25_touch(void){
+	G_pwm_pct_value=25;
+}
+void bt_pwm_set_0_touch(void){
+	G_pwm_pct_value=0;
 }
 
 void UpdateGraph(int val){

@@ -11,9 +11,9 @@ extern "C" {
 
 extern uint32_t G_SecondCounter;
 
+extern uint16_t G_pwm_output_status;
 
-
-
+extern uint16_t G_pwm_pct_value;
 
 
 

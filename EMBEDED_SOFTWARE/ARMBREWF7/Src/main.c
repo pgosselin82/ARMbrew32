@@ -57,6 +57,8 @@ osThreadId ControlTaskHandle;
 
 
 uint32_t G_SecondCounter=0;
+uint16_t G_pwm_output_status=0;
+uint16_t G_pwm_pct_value=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
