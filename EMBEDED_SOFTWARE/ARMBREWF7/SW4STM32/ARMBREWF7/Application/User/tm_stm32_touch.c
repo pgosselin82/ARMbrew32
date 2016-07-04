@@ -19,13 +19,7 @@
 #include "tm_stm32_touch.h"
 #include "string.h"
 
-/* Check for defines */
-#if defined(STM32F439_EVAL) || defined(TOUCH_USE_STM32F439_EVAL)
-#include "tm_stm32_touch_ts3510.h"
-#endif
-#if defined(STM32F7_DISCOVERY) || defined(TOUCH_USE_STM32F7_DISCOVERY)
 #include "tm_stm32_touch_ft5336.h"
-#endif
 
 /* Static driver structure */
 static TM_TOUCH_DRIVER_t TouchDriver;
@@ -40,16 +34,10 @@ TM_TOUCH_Result_t TM_TOUCH_Init(TM_TOUCH_DRIVER_t* Driver, TM_TOUCH_t* TS) {
 		TouchDriver.Read = Driver->Read;
 	} else {
 		/* Set default values */
-#if defined(STM32F439_EVAL) || defined(TOUCH_USE_STM32F439_EVAL)
-		TouchDriver.Init = TM_TOUCH_TS3510_Init;
-		TouchDriver.Read = TM_TOUCH_TS3510_Read;
-#elif defined(STM32F7_DISCOVERY) || defined(TOUCH_USE_STM32F7_DISCOVERY)
+
 		TouchDriver.Init = TM_TOUCH_FT5336_Init;
 		TouchDriver.Read = TM_TOUCH_FT5336_Read;
-#else
-		/* Return error, no default drivers available */
-		return TM_TOUCH_Result_Error;
-#endif
+
 	}
 	
 	/* Try to INIT */

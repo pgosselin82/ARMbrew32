@@ -54,11 +54,19 @@ osThreadId defaultTaskHandle;
 /* Private variables ---------------------------------------------------------*/
 osThreadId GuiTaskHandle;
 osThreadId ControlTaskHandle;
+SemaphoreHandle_t xSemaphoreGraphData;
 
-
+uint32_t G_mSCounter=0;
 uint32_t G_SecondCounter=0;
+
+uint32_t G_PWMCounter=0;
+
 uint16_t G_pwm_output_status=0;
+uint16_t G_pwm_output=0;
 uint16_t G_pwm_pct_value=0;
+
+double G_temperature=0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -114,6 +122,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
+  xSemaphoreGraphData= xSemaphoreCreateBinary();//xSemaphoreCreateMutex();
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -122,7 +131,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 1024);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 1, 1024);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -238,7 +247,7 @@ void MX_GPIO_Init(void)
 void StartGuiTask(void const * argument)
 {
 	TickType_t xLastWakeTime;
-
+	//xSemaphore = xSemaphoreCreateMutex();
 
 	InitGui();
 	xLastWakeTime = xTaskGetTickCount();
@@ -246,8 +255,9 @@ void StartGuiTask(void const * argument)
   for(;;)
   {
     vTaskDelayUntil(&xLastWakeTime,25);
+    xSemaphoreTake(xSemaphoreGraphData,100);
 	GuiLoop();
-
+	xSemaphoreGive(xSemaphoreGraphData);
 
 	//GUI_Delay(25);
   }
@@ -266,31 +276,70 @@ void StartControlTask(void const * argument){
   /* Infinite loop */
   for(;;)
   {
-    vTaskDelayUntil(&xLastWakeTime,1000);
-	//GuiLoop();
-    G_SecondCounter++;
-    if(G_SecondCounter>=4294967295){
-    	G_SecondCounter=0;
+
+    vTaskDelayUntil(&xLastWakeTime,1);
+
+    //mS counter
+    G_mSCounter++;
+    //if(G_mSCounter>=4294967295){ // 4294967295 mS = 4294967.295 S = 71582.78825 min = 1193.0465 h = 49.71 jours
+    if(G_mSCounter>=4000000000){
+    	G_mSCounter=0;
     }
 
+    //S counter
+    if(G_mSCounter%1000==0){
+		G_SecondCounter++;
+		if(G_SecondCounter>=4294967295){
+			G_SecondCounter=0;
+		}
+    }
+
+    //INPUTS
     GraphSampleCounter++;
-    if(GraphSampleCounter>=30){
-    	GraphSampleCounter=0;
+        if(GraphSampleCounter>=100){
+        	GraphSampleCounter=0;
 
-    		    if(add){
-    		    	temp+=3;
-    		    }else{
-    		    	temp-=3;
-    		    }
+        		    if(add){
+        		    	temp+=3;
+        		    }else{
+        		    	temp-=3;
+        		    }
 
-    		    if(temp>=50){
-    		    	add=0;
-    		    }
-    		    if(temp<=0){
-    		    	add=1;
-    		    }
-    		    UpdateGraph(temp);
+        		    if(temp>=50){
+        		    	add=0;
+        		    }
+        		    if(temp<=0){
+        		    	add=1;
+        		    }
+        		    xSemaphoreTake(xSemaphoreGraphData,100);
+        		    UpdateGraph(temp);
+        		    //G_temperature=temp;
+        		    xSemaphoreGive(xSemaphoreGraphData);
+        }
+
+
+    // OUTPUTS
+    //PWM emulation
+    if(G_pwm_output_status){
+        G_PWMCounter++;
+        //Period limit
+        if(G_PWMCounter>=PWM_PERIOD){
+        	G_PWMCounter=0;
+        }
+
+        //Duty Cycle
+        if(G_PWMCounter>=G_pwm_pct_value*PWM_PERIOD/100){
+        	G_pwm_output=0;
+        }else{
+        	G_pwm_output=1;
+        }
+    }else{
+    	//When PWM is Turned off reset the counter
+    	G_pwm_output=0;
+    	G_PWMCounter=0;
     }
+
+
 
 
 

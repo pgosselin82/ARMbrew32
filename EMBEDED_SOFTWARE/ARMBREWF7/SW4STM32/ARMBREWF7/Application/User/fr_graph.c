@@ -194,9 +194,42 @@ void remove_data_point_beginning(FR_DATA_T* data_struct){
 		data_struct->first_point=firstpoint->next;
 
 		free(firstpoint);
+		data_struct->pointQTY-=1;
 
 	}
 
-
 }
 
+void rotate_first_point_to_end(FR_DATA_T* data_struct){
+
+
+
+	if(data_struct->pointQTY>=2){
+
+		FR_DATA_POINT_T* firstpoint;
+
+		FR_DATA_POINT_T* temppoint;
+
+		firstpoint=data_struct->first_point;
+
+		data_struct->first_point=firstpoint->next;
+
+		temppoint=firstpoint->next;
+
+		firstpoint->next=NULL;
+
+		// Go to the last point
+
+		while(temppoint->next!=NULL){
+
+			temppoint=temppoint->next;
+
+		}
+
+		temppoint->next=firstpoint;
+
+
+
+	}
+
+}

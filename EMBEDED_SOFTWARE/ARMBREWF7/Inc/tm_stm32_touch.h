@@ -59,9 +59,9 @@ extern "C" {
  * @note  If you follow my description in @ref TM_DISCO library on how to select your used board, then this library will automatically select your "target".
  * 
 \code
-//Use touch driver on STM32F7-Discovery, FT5336 controller
+//Use touch driver on STM32F7-Discovery, FT5336 controller*/
 #define TOUCH_USE_STM32F7_DISCOVERY
-	
+/*
 //Use touch driver on STM32F439-Eval board, TS3510 controller
 #define TOUCH_USE_STM32F439_EVAL
 \endcode

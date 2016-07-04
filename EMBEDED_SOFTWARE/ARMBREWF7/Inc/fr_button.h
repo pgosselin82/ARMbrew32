@@ -21,6 +21,7 @@ typedef struct {
 	TM_TOUCH_t* TS;
 
 	uint32_t Contour_color;
+	uint32_t Filled_color;
 	uint32_t Touched_fill_color;
 	uint32_t Touched_text_color;
 	uint32_t text_color;
@@ -29,7 +30,7 @@ typedef struct {
 	void (*ReleaseAction)(void);
 }GUI_BUTTON;
 
-void Draw_button(int x,int y,int w,int h,const char* text,uint32_t color,uint32_t textcolor,int filled);
+void Draw_button(int x,int y,int w,int h,const char* text,uint32_t color,uint32_t fill_color,uint32_t textcolor);
 
 void Draw_button_struct(GUI_BUTTON* bt);
 

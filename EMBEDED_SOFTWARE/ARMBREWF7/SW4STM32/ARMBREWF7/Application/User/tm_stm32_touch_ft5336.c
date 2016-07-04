@@ -52,10 +52,17 @@ uint8_t TM_TOUCH_FT5336_Init(TM_TOUCH_t* TS) {
 	/* Check device ID */
 	TM_I2C_Read(TOUCH_FT5336_I2C, TOUCH_FT5336_I2C_DEV, 0xA8, &deviceID);
 	
+
 	/* Check if OK */
 	if (deviceID != 0x51) {
 		/* Connected device is not FT5336 */
 		return 2;
+	}else{
+		// Disable interrupt mode
+		TM_I2C_Write(TOUCH_FT5336_I2C,TOUCH_FT5336_I2C_DEV,0xA4,1);
+
+		// Enable auto calibrate
+		TM_I2C_Write(TOUCH_FT5336_I2C,TOUCH_FT5336_I2C_DEV,0xA0,0x00);
 	}
 	
 	/* Return 0 = OK */
@@ -78,6 +85,8 @@ uint8_t TM_TOUCH_FT5336_Read(TM_TOUCH_t* TS) {
 	
 	/* Check if max detected more than max number of contacts */
 	if (status > 5) {
+		/* In case of Error, reinit the Driver */
+		TM_TOUCH_FT5336_Init(TS);
 		/* Return ERROR */
 		return 1;
 	}

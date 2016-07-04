@@ -10,6 +10,7 @@
 #include "WM.h"
 #include "fr_graph.h"
 #include "fr_button.h"
+#include "fr_display_led.h"
 #include "MyGui.h"
 #include "GlobalVar.h"
 
@@ -46,19 +47,32 @@ GUI_BUTTON bt_menu2;
 GUI_BUTTON bt_menu3;
 GUI_BUTTON bt_menu4;
 GUI_BUTTON bt_menu5;
+FR_GUI_GRAPH_T temp_plot;
 
-/* Page 2 buttons */
+/* Page 2 Widgets HEATER CTRL*/
 GUI_BUTTON bt_pwm_plus;
 GUI_BUTTON bt_pwm_minus;
 GUI_BUTTON bt_pwm_on;
 GUI_BUTTON bt_pwm_pct;
+GUI_BUTTON bt_pwm_temp;
+
 GUI_BUTTON bt_pwm_set_pct_100;
 GUI_BUTTON bt_pwm_set_pct_75;
 GUI_BUTTON bt_pwm_set_pct_50;
 GUI_BUTTON bt_pwm_set_pct_25;
 GUI_BUTTON bt_pwm_set_pct_0;
 
-FR_GUI_GRAPH_T temp_plot;
+GUI_LED ld_pwm_on;
+GUI_LED ld_pwm_output;
+
+
+/* Page 3 Widgets */
+
+/* Page 4 Widgets */
+
+/* Page 5 Widgets Settings*/
+GUI_BUTTON bt_setting_save;
+
 
 void Draw_menu(void);
 
@@ -77,7 +91,7 @@ void bt_pwm_set_50_touch(void);
 void bt_pwm_set_25_touch(void);
 void bt_pwm_set_0_touch(void);
 
-
+void bt_setting_save_touch(void);
 
 
 
@@ -114,13 +128,13 @@ void InitGui(void) {
 	  GUI_SetFont(&GUI_Font20_1);
 
 	  TM_TOUCH_Init(&Driver, &TS);
-
+	  	  //GUI_TOUCH_Exec()
 	  /* Create the 5 Buttons Menu */
 	  x=distance;
 	  y=distance;
 	  GUI_BUTTON_INIT(&bt_menu1,x,y,rect_width,rect_height,"Temp Graph",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu1Touch,NULL);
 	  y=y+rect_height+distance;
-	  GUI_BUTTON_INIT(&bt_menu2,x,y,rect_width,rect_height,"PWM CTRL",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu2Touch,NULL);
+	  GUI_BUTTON_INIT(&bt_menu2,x,y,rect_width,rect_height,"HEAT CTRL",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu2Touch,NULL);
 	  y=y+rect_height+distance;
 	  GUI_BUTTON_INIT(&bt_menu3,x,y,rect_width,rect_height,"Menu3",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&Menu3Touch,NULL);
 	  y=y+rect_height+distance;
@@ -132,8 +146,10 @@ void InitGui(void) {
 
 	  /* Buttons on Page 2 */
 	  x=150;
-	  GUI_BUTTON_INIT(&bt_pwm_pct,x,125,95,50,"0",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,NULL,NULL);
-
+	  y=100;
+	  GUI_BUTTON_INIT(&bt_pwm_pct,x,y,95,50,"NULL",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,NULL,NULL);
+	  y+=55;
+	  GUI_BUTTON_INIT(&bt_pwm_temp,x,y,95,50,"NULL",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,NULL,NULL);
 
 	  x=250;
 	  y=100;
@@ -156,11 +172,16 @@ void InitGui(void) {
 	  y+=45;
 	  GUI_BUTTON_INIT(&bt_pwm_set_pct_0,x,y,55,40,"SET 0",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_pwm_set_0_touch,NULL);
 
+	  GUI_LED_INIT(&ld_pwm_on,315,75,25,GUI_YELLOW,GUI_BLACK);
+	  GUI_LED_INIT(&ld_pwm_output,345,75,25,GUI_YELLOW,GUI_BLACK);
+
 	  /* Buttons on Page 3 */
 
 	  /* Buttons on Page 4 */
 
 	  /* Buttons on Page 5 */
+
+	  GUI_BUTTON_INIT(&bt_setting_save,400,215,55,40,"SAVE",&TS,GUI_YELLOW,GUI_YELLOW,GUI_BLACK,GUI_YELLOW,&bt_setting_save_touch,NULL);
 
 	  temp_plot.x=150;
 	  temp_plot.y=50;
@@ -284,20 +305,52 @@ void DrawPage1(void){
 	Draw_graph_struct(&temp_plot);
 }
 void DrawPage2(void){
-	GUI_DispStringAt("PWM CONTROL OF THE HEATING ELEMENT",113,8);
-	 Draw_button_struct(&bt_pwm_plus);
-	 Draw_button_struct(&bt_pwm_minus);
-	 Draw_button_struct(&bt_pwm_on);
+	//char tempstr[255]={0};
+
+	if(G_pwm_output_status){
+		ld_pwm_on.Fill_color=GUI_RED;
+		bt_pwm_on.Filled_color=GUI_RED;
+		bt_pwm_on.text_color=GUI_BLACK;
+	}else{
+		ld_pwm_on.Fill_color=GUI_BLACK;
+		bt_pwm_on.Filled_color=GUI_BLACK;
+		bt_pwm_on.text_color=GUI_YELLOW;
+	}
+
+	if(G_pwm_output){
+		ld_pwm_output.Fill_color=GUI_RED;
+	}else{
+		ld_pwm_output.Fill_color=GUI_BLACK;
+	}
 
 
-	 sprintf(bt_pwm_pct.text,"%i %%",G_pwm_pct_value);
-	 Draw_button_struct(&bt_pwm_pct);
+	GUI_DispStringAt("HEATING ELEMENT PWM",113,8);
+
+
+	sprintf(bt_pwm_pct.text,"%i %%",G_pwm_pct_value);
+	Draw_button_struct(&bt_pwm_pct);
+
+	sprintf(bt_pwm_temp.text,"%.2f °C",G_temperature);
+	Draw_button_struct(&bt_pwm_temp);
+
+	Draw_button_struct(&bt_pwm_plus);
+	Draw_button_struct(&bt_pwm_minus);
+	Draw_button_struct(&bt_pwm_on);
 
 	Draw_button_struct(&bt_pwm_set_pct_100);
 	Draw_button_struct(&bt_pwm_set_pct_75);
 	Draw_button_struct(&bt_pwm_set_pct_50);
 	Draw_button_struct(&bt_pwm_set_pct_25);
 	Draw_button_struct(&bt_pwm_set_pct_0);
+
+	//sprintf(tempstr,"%i pts",temp_plot.Data.pointQTY);
+	//GUI_DispStringAt(tempstr,113,25);
+
+
+
+	Draw_led_struct(&ld_pwm_on);
+
+	Draw_led_struct(&ld_pwm_output);
 
 }
 void DrawPage3(void){
@@ -308,6 +361,9 @@ void DrawPage4(void){
 }
 void DrawPage5(void){
 	GUI_DispStringAt("Setting Page",113,8);
+
+	Draw_button_struct(&bt_setting_save);
+
 }
 
 void Menu1Touch(void){
@@ -367,18 +423,30 @@ void bt_pwm_set_0_touch(void){
 	G_pwm_pct_value=0;
 }
 
+void bt_setting_save_touch(void){
+
+}
+
+
 void UpdateGraph(int val){
-	FR_DATA_POINT_T* this_point;
 
-	remove_data_point_beginning(&(temp_plot.Data));
+    FR_DATA_POINT_T* this_point;
 
-	this_point=temp_plot.Data.first_point;
+
+    rotate_first_point_to_end(&(temp_plot.Data));
+	this_point=temp_plot.Data.first_point->next;
 
 	while(this_point!=NULL){
 		this_point->x=(this_point->x-1);
+
 		this_point=this_point->next;
+
 	}
-	add_data_point(&(temp_plot.Data),0,val);
+
+	temp_plot.Data.first_point->x=0;
+
+	temp_plot.Data.first_point->y=val;
+
 
 }
 

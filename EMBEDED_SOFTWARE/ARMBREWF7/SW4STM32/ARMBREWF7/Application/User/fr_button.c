@@ -17,6 +17,7 @@ void (*TouchAction)(void),void (*ReleaseAction)(void)){
 	Button->w=w;
 	Button->h=h;
 	Button->Contour_color=Contour_color;
+	Button->Filled_color=GUI_BLACK;
 	Button->Touched_fill_color=Touched_fill_color;
 	Button->Touched_text_color=Touched_text_color;
 	Button->text_color=text_color;
@@ -51,9 +52,9 @@ void Draw_button_struct(GUI_BUTTON* bt){
 
 	/* Draw Button */
 	if(bt->touchstatus){
-		Draw_button(bt->x,bt->y,bt->w,bt->h,bt->text,bt->Touched_fill_color,bt->Touched_text_color,1);
+		Draw_button(bt->x,bt->y,bt->w,bt->h,bt->text,bt->Contour_color,bt->Touched_fill_color,bt->Touched_text_color);
 	}else{
-		Draw_button(bt->x,bt->y,bt->w,bt->h,bt->text,bt->Contour_color,bt->text_color,0);
+		Draw_button(bt->x,bt->y,bt->w,bt->h,bt->text,bt->Contour_color,bt->Filled_color,bt->text_color);
 	}
 
 	/* Do actions */
@@ -67,7 +68,7 @@ void Draw_button_struct(GUI_BUTTON* bt){
 	bt->touchstatus_mem=bt->touchstatus;
 }
 
-void Draw_button(int x,int y,int w,int h,const char* text,uint32_t color,uint32_t textcolor,int filled){
+void Draw_button(int x,int y,int w,int h,const char* text,uint32_t color,uint32_t fill_color,uint32_t textcolor){
 	uint32_t colormemory;
 	uint32_t bkcolormemory;
 
@@ -75,15 +76,17 @@ void Draw_button(int x,int y,int w,int h,const char* text,uint32_t color,uint32_
 	colormemory=GUI_GetColor();
 
 	GUI_SetColor(color);
-	if(filled){
-		GUI_FillRoundedRect(x,y,x+w,y+h,10);
-		GUI_SetBkColor(color);
-	}else{
+	//if(filled){
 		GUI_DrawRoundedRect(x,y,x+w,y+h,10);
-	}
+		GUI_SetColor(fill_color);
+		GUI_FillRoundedRect(x+2,y+2,x+w-2,y+h-2,8);
+		GUI_SetBkColor(color);
+	//}else{
+	//	GUI_DrawRoundedRect(x,y,x+w,y+h,10);
+	//}
 	GUI_SetFont(&GUI_Font16_1);
 	GUI_SetColor(textcolor);
-
+	GUI_SetBkColor(fill_color);
 	GUI_DispStringHCenterAt(text,x+(w/2),y+h/2-8);
 
 	GUI_SetBkColor(bkcolormemory);
