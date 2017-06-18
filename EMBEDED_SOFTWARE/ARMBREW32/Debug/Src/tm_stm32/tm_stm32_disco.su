@@ -1,0 +1,4 @@
+tm_stm32_disco.c:71:6:TM_DISCO_LedInit	24	static
+tm_stm32_disco.c:92:6:TM_DISCO_ButtonInit	16	static
+tm_stm32_disco.c:97:9:TM_DISCO_ButtonOnPressed	0	static
+tm_stm32_disco.c:116:9:TM_DISCO_ButtonOnReleased	0	static

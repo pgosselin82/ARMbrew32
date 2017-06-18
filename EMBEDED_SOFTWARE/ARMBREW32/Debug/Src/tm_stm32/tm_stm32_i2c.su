@@ -1,0 +1,15 @@
+tm_stm32_i2c.c:57:20:TM_I2C_GetHandle	0	static
+tm_stm32_i2c.c:180:17:TM_I2C_Read	40	static
+tm_stm32_i2c.c:209:17:TM_I2C_ReadMulti	40	static
+tm_stm32_i2c.c:238:17:TM_I2C_ReadNoRegister	24	static
+tm_stm32_i2c.c:256:17:TM_I2C_ReadMultiNoRegister	24	static
+tm_stm32_i2c.c:274:17:TM_I2C_Write	32	static
+tm_stm32_i2c.c:297:17:TM_I2C_WriteMulti	32	static
+tm_stm32_i2c.c:315:17:TM_I2C_WriteNoRegister	32	static
+tm_stm32_i2c.c:333:17:TM_I2C_WriteMultiNoRegister	24	static
+tm_stm32_i2c.c:351:17:TM_I2C_Write16	32	static
+tm_stm32_i2c.c:375:17:TM_I2C_Read16	40	static
+tm_stm32_i2c.c:409:17:TM_I2C_IsDeviceConnected	8	static
+tm_stm32_i2c.c:422:17:TM_I2C_WriteReadRepeatedStart	40	static
+tm_stm32_i2c.c:450:13:TM_I2C_InitCustomPinsCallback	0	static
+tm_stm32_i2c.c:122:17:TM_I2C_Init	40	static

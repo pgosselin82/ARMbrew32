@@ -1,0 +1,3 @@
+fr_button.c:19:6:GUI_BUTTON_INIT	0	static
+fr_button.c:79:6:Draw_button	56	static
+fr_button.c:38:6:Draw_button_struct	48	static

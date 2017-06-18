@@ -1,0 +1,2 @@
+tm_stm32_sdram.c:145:16:TM_SDRAM_InitCustomPinsCallback	0	static
+tm_stm32_sdram.c:24:9:TM_SDRAM_Init	136	static
